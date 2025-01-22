@@ -1,0 +1,6 @@
+user = mailadmin
+password = 1234567890
+hosts = db4free.net
+port = 3306
+dbname = mailserver
+query = SELECT destination FROM virtual_aliases WHERE source='%s'

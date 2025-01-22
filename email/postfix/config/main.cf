@@ -1,0 +1,141 @@
+
+# 基本设置
+## <虚拟邮件可以省略> 指定邮件来源域名
+## myorigin = viweei.me
+## <虚拟邮件可以省略> 指定邮件服务器的主机名。它通常是邮件服务器的完全限定域名（FQDN）
+## myhostname = mail.viweei.me
+
+debug_peer_level = 2
+maillog_file = /var/log/postfix.log
+
+## 设置 SMTP 服务的欢迎标语
+smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+
+# 本地邮件通知
+## 禁用本地邮件通知服务
+biff = no
+
+# 域名和兼容性
+## 禁止 Postfix 自动在本地域名后添加一个点。
+append_dot_mydomain = no
+
+## 禁用 README 文件目录
+readme_directory = no
+
+## 设置 Postfix 兼容性级别为 3.6
+compatibility_level = 3.6
+
+# SASL 认证
+
+
+
+
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_local_domain = $myhostname
+broken_sasl_auth_clients = yes
+smtpd_recipient_restrictions = permit_sasl_authenticated,reject_unauth_destination
+
+## 启用 SMTP 认证
+smtpd_sasl_auth_enable = yes
+
+## SASL 认证机制, 默认都是以 Dovecot 作为 SASL 认证，就是发信时STMP用户名验证
+
+# 使用 saslauthd 认证
+smtpd_sasl_type = cyrus
+# saslauthd 配置文件名
+smtpd_sasl_path = smtpd
+
+## 如果与dovecot在同一台主机,可以通过unxi管道进行通信
+##smtpd_sasl_type = dovecot
+## Dovecot 的 SASL 认证套接字路径
+## smtpd_sasl_path = private/auth
+
+
+## 禁止匿名登录
+smtpd_sasl_security_options = noanonymous
+## 设置本地域名，用于 SASL 认证。
+smtpd_sasl_local_domain = $myhostname
+## 允许对不完全兼容的 SASL 客户端进行修复。
+broken_sasl_auth_clients = yes
+## 配置收件人限制，允许 SASL 认证用户，拒绝未经授权的目的地。
+## permit_mynetworks
+smtpd_recipient_restrictions = permit_sasl_authenticated,reject_unauth_destination
+
+# TLS 参数
+## 启用 TLS 加密
+smtpd_use_tls = yes
+## 指定 TLS 证书文件路径。
+smtpd_tls_cert_file=/etc/mail/mail.viweei.me.pem
+smtpd_tls_key_file=/etc/mail/mail.viweei.me.key
+
+## Postfix 作为服务器（即接收邮件）时的 TLS 安全级别
+smtpd_tls_security_level=may
+## Postfix 作为客户端（即发送邮件到其他邮件服务器）时的 TLS 安全级别
+smtp_tls_security_level=may
+
+## 指定 CA 证书路径
+smtp_tls_CApath=/etc/ssl/certs
+
+## 配置 SMTP 客户端的 TLS 会话缓存数据库。
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+## 配置 SMTP 服务器的 TLS 会话缓存数据库。
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+
+
+# 其他设置
+## 邮件服务器进行中继（即转发到其他邮件服务器）时的限制。
+## permit_mynetworks： 允许来自 mynetworks 参数中定义的网络的邮件进行中继
+## permit_sasl_authenticated：允许经过 SASL 认证的用户进行中继。
+## defer_unauth_destination： 拒绝中继到未授权的目的地，但不立即拒绝，而是延迟处理
+## reject_unauth_destination：拒绝中继到未授权的目的地
+smtpd_relay_restrictions = permit_sasl_authenticated,reject_unauth_destination
+
+## 指定别名映射文件 与本地账户冲突
+## 生成别名文件时需要 sudo newaliases
+# alias_maps = hash:/etc/aliases
+## 指定别名数据库文件
+# alias_database = hash:/etc/aliases
+
+## mydestination 定义了哪些邮件应该被投递到本地邮箱，而不是被转发到其他邮件服务器
+## 但 mydestination 和 虚拟邮件有冲突 
+# mydestination = $myhostname, viweei.me, special-story-2.localdomain, localhost.localdomain, localhost
+
+## 指定中继主机（为空表示不使用中继主机）
+relayhost =
+## 指定本地网络范围
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+## 设置邮箱大小限制为 0（不限制）
+mailbox_size_limit = 0
+## 设置收件人分隔符
+recipient_delimiter = +
+## 接收 Postfix 监听所有网络接口。
+inet_interfaces = all
+## 指定 Postfix 支持所有网络协议（IPv4 和 IPv6
+# inet_protocols = all
+inet_protocols = ipv4
+
+# 虚拟邮箱设置
+## 指定虚拟邮箱域, 有多个域名可以用逗号或空格分隔开
+virtual_mailbox_domains = viweei.me
+## 指定虚拟邮箱的基目录
+## 注意这里需要和 Dovecot 的配置文件中的 mail_location 保持一致
+virtual_mailbox_base = /var/mail/vhosts
+## 指定虚拟邮箱用户映射文件
+### 例：
+### user1@viweei.me    viweei.me/user1/
+### user2@example.com  example.com/user2/
+### user1@viweei.me 的邮件将被投递到 viweei.me/user1/ 目录。
+### user2@example.com 的邮件将被投递到 example.com/user2/ 目录。
+##
+## 修改过 vmailbox 文件后需要执行 sudo postmap /etc/postfix/vmailbox
+virtual_mailbox_maps = hash:/etc/postfix/vmailbox
+
+## 指定虚拟邮箱用户的最小 UID
+virtual_minimum_uid = 100
+## 指定虚拟邮箱用户的 UID 映射
+virtual_uid_maps = static:5000
+## 指定虚拟邮箱用户的 GID 映射。
+virtual_gid_maps = static:5000
+## 指定虚拟别名映射文件。
+virtual_alias_maps = hash:/etc/postfix/virtual

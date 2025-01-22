@@ -1,0 +1,25 @@
+FROM alpine:3.21.0
+
+ENV TZ Asia/Shanghai
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN apk add tzdata && cp /usr/share/zoneinfo/${TZ} /etc/localtime
+RUN echo ${TZ} > /etc/timezone
+
+# 安装 Dovecot 和必要的依赖
+RUN apk update
+RUN apk add dovecot
+RUN rm -rf /var/cache/apk/*
+
+# 复制 Dovecot 配置文件到容器中
+# COPY config/dovecot.conf /etc/dovecot/dovecot.conf
+# COPY config/conf.d /etc/dovecot/conf.d
+
+# 创建必要的目录
+RUN mkdir -p /var/mail && \
+    chown -R root:mail /var/mail
+
+# 暴露 IMAP 和 POP3 端口
+EXPOSE 143 993
+
+# 启动 Dovecot
+CMD ["dovecot", "-F"]
