@@ -1,5 +1,5 @@
 # kokor tts directory
 venv
-tts
+tts/kokor/tts
 
-email/*
+email
