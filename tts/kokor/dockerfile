@@ -1,0 +1,18 @@
+FROM python:3.11.11-slim
+
+RUN python -m pip install -i https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple --upgrade pip
+RUN pip3 config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY main.py .
+
+ENV FLASK_APP=main.py
+ENV FLASK_ENV=production
+
+EXPOSE 5000
+
+CMD ["flask", "run", "--host=0.0.0.0"]
