@@ -2,4 +2,6 @@
 venv
 tts/kokor/tts
 
-email
+email/Cyrus-SASL
+email/openDKIM
+email/postfix

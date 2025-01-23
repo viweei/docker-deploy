@@ -5,21 +5,28 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/re
 RUN apk add tzdata && cp /usr/share/zoneinfo/${TZ} /etc/localtime
 RUN echo ${TZ} > /etc/timezone
 
+# 安装 基础软件包
+RUN apk update && \
+    apk add --no-cache ca-certificates && \
+    update-ca-certificates
+
 # 安装 Dovecot 和必要的依赖
-RUN apk update
-RUN apk add dovecot
-RUN rm -rf /var/cache/apk/*
+RUN apk add fish vim net-tools busybox-extras
+
+RUN apk add dovecot dovecot-lmtpd dovecot-mysql
 
 # 复制 Dovecot 配置文件到容器中
-# COPY config/dovecot.conf /etc/dovecot/dovecot.conf
-# COPY config/conf.d /etc/dovecot/conf.d
+COPY config/dovecot.conf /etc/dovecot/dovecot.conf
+COPY config/10-auth.conf /etc/dovecot/conf.d/10-auth.conf
+COPY config/10-mail.conf /etc/dovecot/conf.d/10-mail.conf
+COPY config/10-master.conf /etc/dovecot/conf.d/10-master.conf
+COPY config/auth-sql.conf.ext /etc/dovecot/conf.d/auth-sql.conf.ext
+# 日志
+COPY config/10-logging.conf /etc/dovecot/conf.d/10-logging.conf
 
-# 创建必要的目录
-RUN mkdir -p /var/mail && \
-    chown -R root:mail /var/mail
 
 # 暴露 IMAP 和 POP3 端口
 EXPOSE 143 993
 
 # 启动 Dovecot
-CMD ["dovecot", "-F"]
+# CMD ["dovecot", "-F"]

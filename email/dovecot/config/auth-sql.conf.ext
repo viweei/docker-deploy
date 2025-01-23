@@ -1,0 +1,15 @@
+# /etc/dovecot/conf.d/auth-sql.conf.ext
+
+# 密码数据库
+passdb {
+  driver = sql
+  # Path for SQL configuration file, see example-config/dovecot-sql.conf.ext
+  # 这里将外部配置挂载到这里
+  args = /etc/dovecot/env/sql.conf.ext
+}
+
+# 邮件存存放的目录, 用户和组
+userdb {
+  driver = static
+  args = uid=dovecot gid=dovecot home=/var/mail/%u
+}
