@@ -1,0 +1,41 @@
+version: "3"
+name: mail
+
+networks:
+  vmail-net:
+
+services:
+  mysql:
+    image: mysql:8.0.40-debian
+    restart: on-failure
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - TZ=Asia/Shanghai
+    ports:
+      - 3306:3306
+    networks:
+      - vmail-net
+  dovecot:
+    build:
+      context: ./dovecot
+      dockerfile: dockerfile
+    ports:
+      - 143:143
+      - 993:993
+    volumes:
+      - ./ssl:/etc/ssl/mail/
+      - ./dovecot/sql:/etc/dovecot/sql
+    networks:
+      - vmail-net
+  postfix:
+    build:
+      context: ./postfix
+      dockerfile: dockerfile
+    ports:
+      - 25:25
+      - 587:587
+    volumes:
+      - ./ssl:/etc/ssl/mail
+    networks:
+      - vmail-net

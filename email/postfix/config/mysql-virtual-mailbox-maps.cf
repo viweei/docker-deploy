@@ -1,5 +1,0 @@
-user = mailadmin
-password = 1234567890
-hosts = viweei.me:3306
-dbname = mailserver
-query = SELECT 1 FROM virtual_users WHERE email='%s'

@@ -5,7 +5,7 @@ passdb {
   driver = sql
   # Path for SQL configuration file, see example-config/dovecot-sql.conf.ext
   # 这里将外部配置挂载到这里
-  args = /etc/dovecot/env/sql.conf.ext
+  args = /etc/dovecot/sql/auth.conf.ext
 }
 
 # 邮件存存放的目录, 用户和组

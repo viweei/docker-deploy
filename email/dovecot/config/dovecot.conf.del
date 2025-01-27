@@ -21,8 +21,8 @@
 # --sysconfdir=/etc --localstatedir=/var
 
 # Enable installed protocols.
-protocols = imap lmtp
-# !include_try /usr/share/dovecot/protocols.d/*.conf
+# protocols = imap lmtp
+!include_try /usr/share/dovecot/protocols.d/*.conf
 
 # A comma separated list of IPs or hosts where to listen in for connections.
 # "*" listens in all IPv4 interfaces, "::" listens in all IPv6 interfaces.

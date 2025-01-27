@@ -4,18 +4,16 @@ driver = mysql
 # 数据库连接
 connect = host=172.26.13.29 port=3306 dbname=mailserver user=root password=123456
 # 密码类型
-default_pass_scheme = PLAIN
-
+# default_pass_scheme = PLAIN
+default_pass_scheme = SSHA256
 
 # 如果 Cyrus SASL 通过 IMAP 验证需要注意,是否带有 -r 参数,会把域名合并
 # %u = entire user@domain
 # %n = user part of user@domain
 # %d = domain part of user@domain
 
-
 # 密码查询语句
 password_query = SELECT email as user, password FROM users WHERE email = '%u';
-
 
 
 #   mail - Mail location (overrides mail_location setting)

@@ -16,7 +16,7 @@ smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
 biff = no
 
 # 域名和兼容性
-## 禁止 Postfix 自动在本地域名后添加一个点。
+## 禁止 Postfix 自动在本地域名后添加 点和域名。
 append_dot_mydomain = no
 
 ## 禁用 README 文件目录
@@ -26,64 +26,79 @@ readme_directory = no
 compatibility_level = 3.6
 
 # SASL 认证
-
-
-
-
-smtpd_sasl_security_options = noanonymous
-smtpd_sasl_local_domain = $myhostname
-broken_sasl_auth_clients = yes
-smtpd_recipient_restrictions = permit_sasl_authenticated,reject_unauth_destination
-
-## 启用 SMTP 认证
+## 这是最基本的设置，用于启用 SMTP 认证功能
 smtpd_sasl_auth_enable = yes
-
-## SASL 认证机制, 默认都是以 Dovecot 作为 SASL 认证，就是发信时STMP用户名验证
-
-# 使用 saslauthd 认证
-smtpd_sasl_type = cyrus
-# saslauthd 配置文件名
-smtpd_sasl_path = smtpd
-
-## 如果与dovecot在同一台主机,可以通过unxi管道进行通信
-##smtpd_sasl_type = dovecot
-## Dovecot 的 SASL 认证套接字路径
-## smtpd_sasl_path = private/auth
-
-
 ## 禁止匿名登录
 smtpd_sasl_security_options = noanonymous
-## 设置本地域名，用于 SASL 认证。
+#?设置 SASL 认证的本地域名
 smtpd_sasl_local_domain = $myhostname
-## 允许对不完全兼容的 SASL 客户端进行修复。
+## 用于支持一些较老的或不规范的邮件客户端
 broken_sasl_auth_clients = yes
-## 配置收件人限制，允许 SASL 认证用户，拒绝未经授权的目的地。
-## permit_mynetworks
-smtpd_recipient_restrictions = permit_sasl_authenticated,reject_unauth_destination
+## 设置收件人限制规则,这是一个重要的安全设置，防止服务器被用作垃圾邮件中继
+## permit_mynetworks: 允许本地网络
+## permit_sasl_authenticated: 允许已通过 SASL 认证的用户发送邮件
+## reject_unauth_destination: 拒绝发往未经授权目标的邮件
+## reject_unlisted_recipient: 拒绝接收发往未知收件人的邮件
+smtpd_recipient_restrictions = permit_mynetworks,permit_sasl_authenticated,reject_unlisted_recipient
+  # reject_unauth_destination,  
+
+# 使用 saslauthd 认证
+
+# smtpd_sasl_path 指定了 Postfix SMTP 服务器与 SASL 认证服务通信的路径或套接字位置。
+# 当 smtpd_sasl_type = cyrus 
+# smtpd_sasl_path = smtpd 
+# 时. 表示使用 /var/run/saslauthd/mux 这个 Unix 域套接字
+# smtpd_sasl_type = cyrus
+# smtpd_sasl_path = smtpd
+
+# 认证方式, 常有的： cyrus, dovecot
+# 可能通过命令 postconf -a 来查看支持那些
+smtpd_sasl_type = dovecot
+## Dovecot 的 SASL 认证套接字路径
+## Postfix smtp-auth
+## 位置在: /var/spool/postfix/private/auth 
+## smtpd_sasl_path = private/auth
+
+## 使用网络套接字连接 dovecot
+smtpd_sasl_path = inet:172.26.13.29:12345
+
 
 # TLS 参数
-## 启用 TLS 加密
-smtpd_use_tls = yes
-## 指定 TLS 证书文件路径。
-smtpd_tls_cert_file=/etc/mail/mail.viweei.me.pem
-smtpd_tls_key_file=/etc/mail/mail.viweei.me.key
+## none:    禁用 TLS,使用明文
+## may:     如果客户端不支持 TLS，将降级为明文传输
+## encrypt: 强制要求 TLS 加密,如果客户端不支持 TLS，连接将被拒绝,常用于提交端口(587)
+##          需要配配合 smtpd_tls_auth_only = yes
+##
+## verify:  要求 TLS 并验证客户端证书,客户端必须提供有效的证书
+##          需要配合  smtpd_tls_ask_ccert = yes
+##                  smtpd_tls_req_ccert = yes
+##
+## secure： 要求 TLS、验证客户端证书,强制使用高强度加密算法
+##          需要配合  smtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1
+##                  smtpd_tls_mandatory_ciphers = high
 
-## Postfix 作为服务器（即接收邮件）时的 TLS 安全级别
-smtpd_tls_security_level=may
 ## Postfix 作为客户端（即发送邮件到其他邮件服务器）时的 TLS 安全级别
+## 您的Postfix -> 其他邮件服务器
 smtp_tls_security_level=may
 
+## Postfix 作为服务器（即接收邮件）时的 TLS 安全级别
+## 其他邮件客户端/服务器 -> 您的Postfix
+smtpd_tls_security_level=may
+# 建议使用 encrypt
+# smtpd_tls_auth_only = yes
+
+## 指定 TLS 证书文件路径。
+# smtpd_tls_cert_file=/etc/mail/mail.viweei.me.pem
+# smtpd_tls_key_file=/etc/mail/mail.viweei.me.key
+
 ## 指定 CA 证书路径
-smtp_tls_CApath=/etc/ssl/certs
+# smtp_tls_CApath=/etc/ssl/certs
 
 ## 配置 SMTP 客户端的 TLS 会话缓存数据库。
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
-
 ## 配置 SMTP 服务器的 TLS 会话缓存数据库。
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 
-
-# 其他设置
 ## 邮件服务器进行中继（即转发到其他邮件服务器）时的限制。
 ## permit_mynetworks： 允许来自 mynetworks 参数中定义的网络的邮件进行中继
 ## permit_sasl_authenticated：允许经过 SASL 认证的用户进行中继。
@@ -101,11 +116,15 @@ smtpd_relay_restrictions = permit_sasl_authenticated,reject_unauth_destination
 ## 但 mydestination 和 虚拟邮件有冲突 
 # mydestination = $myhostname, viweei.me, special-story-2.localdomain, localhost.localdomain, localhost
 
-## 指定中继主机（为空表示不使用中继主机）
-relayhost =
-## 指定本地网络范围
-mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
-## 设置邮箱大小限制为 0（不限制）
+## 指定中继主机，就是下一个 SMTP 服务器，空值表示直接发送，不经过中继
+## 使用场景：内部网络向外部网络发邮件.
+# relayhost =
+## 定义可信任的网络地址列表
+mynetworks = 127.0.0.0/8
+
+## 设单封邮件的大小，不能真正限制用户邮箱的总大小 0（不限制）
+## mailbox_size_limit = 1073741824  # 1GB
+## mailbox_size_limit = 51200000    # 50MB
 mailbox_size_limit = 0
 ## 设置收件人分隔符
 recipient_delimiter = +
@@ -115,12 +134,10 @@ inet_interfaces = all
 # inet_protocols = all
 inet_protocols = ipv4
 
-# 虚拟邮箱设置
-## 指定虚拟邮箱域, 有多个域名可以用逗号或空格分隔开
-virtual_mailbox_domains = viweei.me
 ## 指定虚拟邮箱的基目录
-## 注意这里需要和 Dovecot 的配置文件中的 mail_location 保持一致
-virtual_mailbox_base = /var/mail/vhosts
+## 如果将邮件转给 Dovecot 就不需要这个参数
+# virtual_mailbox_base = /var/mail/
+
 ## 指定虚拟邮箱用户映射文件
 ### 例：
 ### user1@viweei.me    viweei.me/user1/
@@ -128,14 +145,29 @@ virtual_mailbox_base = /var/mail/vhosts
 ### user1@viweei.me 的邮件将被投递到 viweei.me/user1/ 目录。
 ### user2@example.com 的邮件将被投递到 example.com/user2/ 目录。
 ##
-## 修改过 vmailbox 文件后需要执行 sudo postmap /etc/postfix/vmailbox
-virtual_mailbox_maps = hash:/etc/postfix/vmailbox
+
+# 虚拟邮箱设置
+## 虚拟域名设置
+#virtual_mailbox_domains = viweei.me
+## 使用post-mysql 从数据库中取
+virtual_mailbox_domains = mysql:/etc/postfix/sql/domains.cf
+
+## 定义哪些邮箱地址是有效的，用于验证收件人是否存在
+# virtual_mailbox_maps = hash:/etc/postfix/vmailbox
+virtual_mailbox_maps = mysql:/etc/postfix/sql/mailbox.cf
+
+## 指定邮件别名
+## 定义邮件别名和转发规则，可以将邮件从一个地址转发到另一个或多个地址
+# virtual_alias_maps = hash:/etc/postfix/virtual
+virtual_alias_maps = mysql:/etc/postfix/sql/alias.cf 
+
+
+# 这向个参数是POSTFIX自己保存邮件时使用的，因为postfix会把邮件存放到文件目录中
+# 所以需要设置用户权限,当使用 LMTP 把邮件转给dovecot时就不需要了.
 
 ## 指定虚拟邮箱用户的最小 UID
-virtual_minimum_uid = 100
+#virtual_minimum_uid = 100
 ## 指定虚拟邮箱用户的 UID 映射
-virtual_uid_maps = static:5000
+#virtual_uid_maps = static:5000
 ## 指定虚拟邮箱用户的 GID 映射。
-virtual_gid_maps = static:5000
-## 指定虚拟别名映射文件。
-virtual_alias_maps = hash:/etc/postfix/virtual
+#virtual_gid_maps = static:5000

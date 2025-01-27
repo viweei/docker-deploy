@@ -16,17 +16,19 @@ RUN apk add fish vim net-tools busybox-extras
 RUN apk add dovecot dovecot-lmtpd dovecot-mysql
 
 # 复制 Dovecot 配置文件到容器中
-COPY config/dovecot.conf /etc/dovecot/dovecot.conf
+# COPY config/dovecot.conf /etc/dovecot/dovecot.conf
 COPY config/10-auth.conf /etc/dovecot/conf.d/10-auth.conf
 COPY config/10-mail.conf /etc/dovecot/conf.d/10-mail.conf
 COPY config/10-master.conf /etc/dovecot/conf.d/10-master.conf
 COPY config/auth-sql.conf.ext /etc/dovecot/conf.d/auth-sql.conf.ext
+# SSL
+COPY config/10-ssl.conf /etc/dovecot/conf.d/10-ssl.conf
 # 日志
 COPY config/10-logging.conf /etc/dovecot/conf.d/10-logging.conf
 
 
-# 暴露 IMAP 和 POP3 端口
-EXPOSE 143 993
+# 暴露 IMAP IMAPD AUTH 端口
+EXPOSE 24 143 993 12345
 
 # 启动 Dovecot
 # CMD ["dovecot", "-F"]

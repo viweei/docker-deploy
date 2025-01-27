@@ -1,6 +1,0 @@
-user = mailadmin
-password = 1234567890
-hosts = db4free.net
-port = 3306
-dbname = mailserver
-query = SELECT 1 FROM virtual_domains WHERE name='%s'

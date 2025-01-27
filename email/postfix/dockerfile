@@ -7,27 +7,21 @@ RUN echo ${TZ} > /etc/timezone
 
 # 安装 Postfix 和必要的软件包
 RUN apk update && \
-    apk add --no-cache postfix mailx ca-certificates && \
+    apk add --no-cache ca-certificates && \
     update-ca-certificates
+
+# 安装 Dovecot 和必要的依赖
+RUN apk add fish vim net-tools busybox-extras
+
+RUN apk add postfix postfix-mysql
+# mailx
 
 # 配置 Postfix
 COPY config/main.cf /etc/postfix/main.cf
-COPY config/sasl_passwd /etc/postfix/sasl_passwd
-
-# 创建 Postfix 运行所需的目录
-RUN mkdir -p /var/spool/postfix /var/lib/postfix /etc/postfix
-
-# 设置 Postfix 配置文件的权限
-RUN chown root:root /etc/postfix/sasl_passwd
-RUN chown root:root /etc/postfix/main.cf
-
-# 创建 Postfix 用户和组
-# RUN adduser -S -D -u 1000 postfix
-# RUN addgroup -S -g 1000 postfix
-# RUN chown -R postfix:postfix /var/spool/postfix /var/lib/postfix /etc/postfix
+COPY config/master.cf /etc/postfix/master.cf
 
 # 暴露 SMTP 端口
-EXPOSE 25
+EXPOSE 25 587
 
 # 启动 Postfix
-CMD ["postfix", "start-fg"]
+# CMD ["postfix", "start-fg"]
