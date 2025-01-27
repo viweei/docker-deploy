@@ -31,4 +31,4 @@ COPY config/10-logging.conf /etc/dovecot/conf.d/10-logging.conf
 EXPOSE 24 143 993 12345
 
 # 启动 Dovecot
-# CMD ["dovecot", "-F"]
+ENTRYPOINT [ "dovecot", "-F" ]

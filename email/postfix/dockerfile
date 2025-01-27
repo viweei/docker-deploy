@@ -24,4 +24,4 @@ COPY config/master.cf /etc/postfix/master.cf
 EXPOSE 25 587
 
 # 启动 Postfix
-# CMD ["postfix", "start-fg"]
+ENTRYPOINT [ "postfix", "start" ]
