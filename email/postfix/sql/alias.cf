@@ -1,0 +1,5 @@
+user = root
+password = 123456
+hosts = 172.26.13.29:3306
+dbname = mailserver
+query = SELECT destination FROM aliases WHERE source='%s'

@@ -20,6 +20,7 @@ services:
     build:
       context: ./dovecot
       dockerfile: dockerfile
+    container_name: dovecot
     ports:
       - 143:143
       - 993:993
@@ -32,6 +33,7 @@ services:
     build:
       context: ./postfix
       dockerfile: dockerfile
+    container_name: postfix
     ports:
       - 25:25
       - 587:587

@@ -1,7 +1,7 @@
 # kokor tts directory
-venv
+tts/kokor/venv
 tts/kokor/tts
 
 email/Cyrus-SASL
 email/openDKIM
-email/postfix
+email/ssl

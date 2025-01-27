@@ -60,7 +60,8 @@ smtpd_sasl_type = dovecot
 ## smtpd_sasl_path = private/auth
 
 ## 使用网络套接字连接 dovecot
-smtpd_sasl_path = inet:172.26.13.29:12345
+## inet:[ip]:[port]
+smtpd_sasl_path = inet:dovecot:12345
 
 
 # TLS 参数
@@ -83,13 +84,13 @@ smtp_tls_security_level=may
 
 ## Postfix 作为服务器（即接收邮件）时的 TLS 安全级别
 ## 其他邮件客户端/服务器 -> 您的Postfix
-smtpd_tls_security_level=may
 # 建议使用 encrypt
-# smtpd_tls_auth_only = yes
+smtpd_tls_security_level=encrypt
+smtpd_tls_auth_only = yes
 
 ## 指定 TLS 证书文件路径。
-# smtpd_tls_cert_file=/etc/mail/mail.viweei.me.pem
-# smtpd_tls_key_file=/etc/mail/mail.viweei.me.key
+smtpd_tls_cert_file=/etc/ssl/mail/mail.viweei.me.pem
+smtpd_tls_key_file=/etc/ssl/mail/mail.viweei.me.key
 
 ## 指定 CA 证书路径
 # smtp_tls_CApath=/etc/ssl/certs
