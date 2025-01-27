@@ -21,7 +21,7 @@ services:
       context: ./dovecot
       dockerfile: dockerfile
       args:
-        VERSION: 0.0.2
+        - VERSION=0.0.2
     container_name: dovecot
     ports:
       - 143:143
@@ -36,7 +36,7 @@ services:
       context: ./postfix
       dockerfile: dockerfile
       args:
-        VERSION: 0.0.2
+        - VERSION=0.0.2
     container_name: postfix
     ports:
       - 25:25
