@@ -13,5 +13,5 @@ postfix 本身是不具备账户验证功能,当投递邮件时需要验证用�
 ### 整体服务构建
 
 ```sh
-docker compose build
+VERSION=0.0.1 docker compose build
 ```
