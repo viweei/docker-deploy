@@ -20,8 +20,7 @@ services:
     build:
       context: ./dovecot
       dockerfile: dockerfile
-      args:
-        - VERSION=0.0.2
+    image: dovcot:${VERSION}
     container_name: dovecot
     ports:
       - 143:143
@@ -35,8 +34,7 @@ services:
     build:
       context: ./postfix
       dockerfile: dockerfile
-      args:
-        - VERSION=0.0.2
+    image: postfix:${VERSION}
     container_name: postfix
     ports:
       - 25:25
