@@ -22,6 +22,12 @@ RUN apk add postfix postfix-mysql
 COPY config/main.cf /etc/postfix/main.cf
 COPY config/master.cf /etc/postfix/master.cf
 
+# SQL  配置
+RUN mkdir /etc/postfix/sql
+COPY sql/alias.cf /etc/postfix/sql/alias.cf
+COPY sql/domain.cf /etc/postfix/sql/domain.cf
+COPY sql/mailbox.cf /etc/postfix/sql/mailbox.cf
+
 # 暴露 SMTP 端口
 EXPOSE 25 587
 
