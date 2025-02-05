@@ -9,7 +9,7 @@ debug_peer_level = 2
 maillog_file = /var/log/postfix.log
 
 ## 设置 SMTP 服务的欢迎标语
-smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+smtpd_banner = $myhostname ESMTP $mail_name
 
 # 本地邮件通知
 ## 禁用本地邮件通知服务
