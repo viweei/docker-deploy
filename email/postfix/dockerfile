@@ -29,11 +29,12 @@ COPY sql/domains.cf /etc/postfix/sql/domains.cf
 COPY sql/mailbox.cf /etc/postfix/sql/mailbox.cf
 
 # 启动文件
-COPY entrypoint.sh /
+WORKDIR /
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # 暴露 SMTP 端口
 EXPOSE 25 587
 
 # 启动 Postfix
-ENTRYPOINT ['/entrypoint.sh']
+ENTRYPOINT ["sh", "-c", "/entrypoint.sh"]
