@@ -96,9 +96,9 @@ smtpd_tls_key_file=/etc/ssl/mail/mail.viweei.me.key
 # smtp_tls_CApath=/etc/ssl/certs
 
 ## 配置 SMTP 客户端的 TLS 会话缓存数据库。
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_session_cache_database = lmdb:${data_directory}/smtp_scache
 ## 配置 SMTP 服务器的 TLS 会话缓存数据库。
-smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtpd_tls_session_cache_database = lmdb:${data_directory}/smtpd_scache
 
 ## 邮件服务器进行中继（即转发到其他邮件服务器）时的限制。
 ## permit_mynetworks： 允许来自 mynetworks 参数中定义的网络的邮件进行中继

@@ -29,6 +29,9 @@ COPY config/10-ssl.conf /etc/dovecot/conf.d/10-ssl.conf
 COPY config/10-logging.conf /etc/dovecot/conf.d/10-logging.conf
 
 
+# 修改目录权限
+RUN chown -R dovecot:dovecot /var/mail
+
 # 暴露 IMAP IMAPD AUTH 端口
 EXPOSE 24 143 993 12345
 
