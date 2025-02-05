@@ -30,6 +30,8 @@ services:
       - ./dovecot/sql:/etc/dovecot/sql
     networks:
       - vmail-net
+    depends_on:
+      - mysql
 
   postfix:
     build:
@@ -44,3 +46,5 @@ services:
       - ./ssl:/etc/ssl/mail
     networks:
       - vmail-net
+    depends_on:
+      - dovecot
