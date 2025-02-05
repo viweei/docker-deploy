@@ -135,10 +135,7 @@ testsaslauthd -u [username] -p [password]
 # 如果报权限不够，需要加入 sasl用户组.
 
 # 检查postfix数据库是否连通
-sudo postmap -q 'testi@viweei.me' mysql:/etc/postfix/sql/mailbox.cf
-
-
-
+postmap -q 'testi@viweei.me' mysql:/etc/postfix/sql/mailbox.cf
 ```
 
 ### 问题集
