@@ -11,6 +11,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=123456
       - TZ=Asia/Shanghai
+    security_opt:
+      - seccomp:unconfined
     ports:
       - 3306:3306
     networks:
