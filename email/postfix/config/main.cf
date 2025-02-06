@@ -61,7 +61,8 @@ smtpd_sasl_type = dovecot
 
 ## 使用网络套接字连接 dovecot
 ## inet:[ip]:[port]
-smtpd_sasl_path = inet:dovecot:12345
+## 由于这个配置不能使用 域名，主机名, 只能使用 IP 地址,设置放在外部配置 entrypoint.sh 
+# smtpd_sasl_path = inet:dovecot:12345
 
 
 # TLS 参数
@@ -80,12 +81,12 @@ smtpd_sasl_path = inet:dovecot:12345
 
 ## Postfix 作为客户端（即发送邮件到其他邮件服务器）时的 TLS 安全级别
 ## 您的Postfix -> 其他邮件服务器
-smtp_tls_security_level=may
+smtp_tls_security_level = may
 
 ## Postfix 作为服务器（即接收邮件）时的 TLS 安全级别
 ## 其他邮件客户端/服务器 -> 您的Postfix
 # 建议使用 encrypt
-smtpd_tls_security_level=encrypt
+smtpd_tls_security_level = encrypt
 smtpd_tls_auth_only = yes
 
 ## 指定 TLS 证书文件路径。

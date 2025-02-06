@@ -13,6 +13,8 @@ RUN apk update && \
     update-ca-certificates
 
 # 安装 Dovecot 和必要的依赖
+RUN apk add dig gettext-envsubst 
+# 调试用的工具
 RUN apk add fish vim net-tools busybox-extras
 
 RUN apk add postfix postfix-mysql
