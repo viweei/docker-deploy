@@ -2,7 +2,7 @@
 
 export DB_HOST=$(dig +short mysql)
 export DB_PORT=3306
-export DB_USER=root
+export DB_USER=mail
 export DB_PASSWORD=123456
 export DB_NAME=mailserver
 

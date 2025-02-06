@@ -1,0 +1,60 @@
+FROM debian:bookworm-slim
+
+# 设置时区为 Asia/Shanghai
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# 安装必要的软件包
+RUN apt update --quiet && apt install -y ca-certificates 
+
+# 使用 DEB822 格式配置清华大学的镜像源,并更新系统
+# RUN mkdir -p /etc/apt/sources.list.d && \
+#     echo "Types: deb" > /etc/apt/sources.list.d/debian.sources && \
+#     echo "URIs: https://mirrors.tuna.tsinghua.edu.cn/debian" >> /etc/apt/sources.list.d/debian.sources && \
+#     echo "Suites: bookworm bookworm-updates bookworm-backports" >> /etc/apt/sources.list.d/debian.sources && \
+#     echo "Components: main contrib non-free non-free-firmware" >> /etc/apt/sources.list.d/debian.sources && \
+#     echo "Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg" >> /etc/apt/sources.list.d/debian.sources && \
+#     apt update
+
+## 安装 fish
+RUN apt install -y curl gpg && \
+    echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_12/ /'| tee /etc/apt/sources.list.d/shells:fish:release:3.list && \
+    curl -fsSL https://download.opensuse.org/repositories/shells:fish:release:3/Debian_12/Release.key | gpg --dearmor | tee /etc/apt/trusted.gpg.d/shells_fish_release_3.gpg && \
+    apt update && \
+    apt install -y fish
+
+
+# 安装调试工具
+RUN apt install -y vim net-tools
+
+# 安装 postfix 
+RUN apt install -y postfix postfix-mysql bind9-dnsutils gettext-base
+# mariadb-connector-c 
+
+# 配置 Postfix
+COPY config/main.cf /etc/postfix/main.cf
+COPY config/master.cf /etc/postfix/master.cf
+
+# # SQL  配置
+RUN mkdir /etc/postfix/sql
+COPY sql/alias.cf.template /etc/postfix/sql/alias.cf.template
+COPY sql/domains.cf.template /etc/postfix/sql/domains.cf.template
+COPY sql/mailbox.cf.template /etc/postfix/sql/mailbox.cf.template
+
+
+# 启动文件
+WORKDIR /root
+COPY entrypoint.sh /root/entrypoint.sh
+RUN chmod +x /root/entrypoint.sh
+
+# 暴露 SMTP 端口
+EXPOSE 25 587
+
+# 启动 Postfix
+ENTRYPOINT ["sh", "-c", "/root/entrypoint.sh"]
+
+
+
+
+
+

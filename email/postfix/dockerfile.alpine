@@ -1,6 +1,5 @@
 FROM alpine:3.21.0
-ARG VERSION
-LABEL version=$VERSION
+# alpine 域名解析有问题，换成 debian
 
 ENV TZ Asia/Shanghai
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
