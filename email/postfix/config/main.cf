@@ -107,11 +107,14 @@ smtpd_tls_session_cache_database = lmdb:${data_directory}/smtpd_scache
 ## reject_unauth_destination：拒绝中继到未授权的目的地
 smtpd_relay_restrictions = permit_sasl_authenticated,reject_unauth_destination
 
-## 指定别名映射文件 与本地账户冲突
+
+## 指定本地别名数据库的位置
 ## 生成别名文件时需要 sudo newaliases
 # alias_maps = hash:/etc/aliases
-## 指定别名数据库文件
 # alias_database = hash:/etc/aliases
+# 置空后禁用本地别名
+alias_maps = 
+alias_database = 
 
 ## mydestination 定义了哪些邮件应该被投递到本地邮箱，而不是被转发到其他邮件服务器
 ## 但 mydestination 和 虚拟邮件有冲突 
