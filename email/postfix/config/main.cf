@@ -61,7 +61,7 @@ smtpd_sasl_type = dovecot
 
 ## 使用网络套接字连接 dovecot
 ## inet:[ip]:[port]
-## 由于这个配置不能使用 域名，主机名, 只能使用 IP 地址,设置放在外部配置 entrypoint.sh 
+## !!! 由于这个配置不能使用 域名，主机名, 只能使用 IP 地址,设置放在外部配置 entrypoint.sh 
 # smtpd_sasl_path = inet:dovecot:12345
 
 

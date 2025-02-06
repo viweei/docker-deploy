@@ -46,6 +46,7 @@ COPY sql/mailbox.cf.template /etc/postfix/sql/mailbox.cf.template
 WORKDIR /root
 COPY entrypoint.sh /root/entrypoint.sh
 RUN chmod +x /root/entrypoint.sh
+RUN chmod o+r /etc/resolv.conf
 
 # 暴露 SMTP 端口
 EXPOSE 25 587
