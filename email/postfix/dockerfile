@@ -26,9 +26,9 @@ COPY config/master.cf /etc/postfix/master.cf
 
 # SQL  配置
 RUN mkdir /etc/postfix/sql
-COPY sql/alias.cf /etc/postfix/sql/alias.cf
-COPY sql/domains.cf /etc/postfix/sql/domains.cf
-COPY sql/mailbox.cf /etc/postfix/sql/mailbox.cf
+COPY sql/alias.cf.template /etc/postfix/sql/alias.cf.template
+COPY sql/domains.cf.template /etc/postfix/sql/domains.cf.template
+COPY sql/mailbox.cf.template /etc/postfix/sql/mailbox.cf.template
 
 # 启动文件
 WORKDIR /
