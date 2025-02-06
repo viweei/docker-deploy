@@ -12,12 +12,11 @@ RUN apk update && \
     apk add --no-cache ca-certificates && \
     update-ca-certificates
 
-# 安装 Dovecot 和必要的依赖
-RUN apk add --no-cache bind-tools gettext-envsubst mariadb-connector-c
 # 调试用的工具
 RUN apk add fish vim net-tools busybox-extras
 
-RUN apk add postfix postfix-mysql
+# 安装 postfix 和必要的依赖
+RUN apk add --no-cache postfix postfix-mysql mariadb-connector-c bind-tools gettext-envsubst
 # mailx
 
 # 配置 Postfix

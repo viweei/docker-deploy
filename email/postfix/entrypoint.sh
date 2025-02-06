@@ -13,8 +13,8 @@ envsubst < /etc/postfix/sql/mailbox.cf.template > /etc/postfix/sql/mailbox.cf
 # Start Postfix
 postfix start
 
-DOVECOT_HOST=$(dig +short dovecot)
-DOVECOT_PORT=12345
+export DOVECOT_HOST=$(dig +short dovecot)
+export DOVECOT_PORT=12345
 postconf -e smtpd_sasl_path=inet:${DOVECOT_HOST}:${DOVECOT_PORT}
 
 tail -f /var/log/postfix.log 
