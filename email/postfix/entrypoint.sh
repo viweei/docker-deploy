@@ -4,7 +4,7 @@
 DOVECOT_HOST=$(dig +short dovecot)
 DOVECOT_PORT=12345
 
-postconf -e smtpd_sasl_path=inet:${DOVECOT_HOST}:${DOVECOT_PORT}
+postconf -e "smtpd_sasl_path=inet:${DOVECOT_HOST}:${DOVECOT_PORT}"
 
 export DB_HOST=$(dig +short mysql)
 export DB_PORT=3306
