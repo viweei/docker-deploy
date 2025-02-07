@@ -35,12 +35,17 @@ RUN apt install -y postfix postfix-mysql postfix-lmdb bind9-dnsutils gettext-bas
 COPY config/main.cf /etc/postfix/main.cf
 COPY config/master.cf /etc/postfix/master.cf
 
+# !!! 写入DNS,不然 SMTP 无法解析域名,狗日的坑我3天~
+# 172.31.255.2 是搬瓦工的DNS
+RUN echo "nameserver 172.31.255.2" > /var/spool/postfix/etc/resolv.conf && \
+    echo "nameserver 8.8.8.8" >> /var/spool/postfix/etc/resolv.conf && \
+    echo "nameserver 1.1.1.1" >> /var/spool/postfix/etc/resolv.conf  
+
 # # SQL  配置
 RUN mkdir /etc/postfix/sql
 COPY sql/alias.cf.template /etc/postfix/sql/alias.cf.template
 COPY sql/domains.cf.template /etc/postfix/sql/domains.cf.template
 COPY sql/mailbox.cf.template /etc/postfix/sql/mailbox.cf.template
-
 
 # 启动文件
 WORKDIR /root

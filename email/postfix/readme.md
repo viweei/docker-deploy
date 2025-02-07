@@ -172,3 +172,7 @@ postfix:0.0.1 /usr/bin/fish
 
 
 ```
+
+# 操~关于 STMP 无法解析 DNS 的问题
+
+/var/spool/postfix/etc/
