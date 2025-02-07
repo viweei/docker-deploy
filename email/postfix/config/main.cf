@@ -9,7 +9,7 @@ debug_peer_level = 2
 maillog_file = /var/log/postfix.log
 
 ## 设置 SMTP 服务的欢迎标语
-smtpd_banner = $myhostname ESMTP $mail_name
+smtpd_banner = Viweei ESMTP Mail Server
 
 # 本地邮件通知
 ## 禁用本地邮件通知服务
@@ -84,8 +84,10 @@ smtp_tls_security_level = may
 
 smtpd_tls_auth_only = yes
 ## Postfix 作为服务器（即接收邮件）时的 TLS 安全级别
-## 其他邮件客户端/服务器 -> 您的Postfix,建议使用 encrypt
-smtpd_tls_security_level = encrypt
+## 其他邮件客户端/服务器 -> 您的Postfix
+# smtpd_tls_security_level = encrypt
+# 如果使用 encrypt gmail 没有问题可以收到邮件,但像 126, 163 的就会被退信
+smtpd_tls_security_level = may
 
 
 ## 指定 TLS 证书文件路径。

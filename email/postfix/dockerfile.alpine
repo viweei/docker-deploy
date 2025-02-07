@@ -2,7 +2,7 @@ FROM alpine:3.21.0
 # alpine 域名解析有问题，换成 debian
 
 ENV TZ Asia/Shanghai
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk add tzdata && cp /usr/share/zoneinfo/${TZ} /etc/localtime
 RUN echo ${TZ} > /etc/timezone
 
@@ -15,8 +15,14 @@ RUN apk update && \
 RUN apk add fish vim net-tools busybox-extras
 
 # 安装 postfix 和必要的依赖
-RUN apk add --no-cache postfix postfix-mysql mariadb-connector-c bind-tools gettext-envsubst
-# mailx
+RUN apk add --no-cache postfix postfix-mysql bind-tools gettext-envsubst
+
+
+# !!! 写入DNS,不然 SMTP 无法解析域名,狗日的坑我3天~
+# 172.31.255.2 是搬瓦工的DNS
+RUN echo "nameserver 172.31.255.2" > /var/spool/postfix/etc/resolv.conf && \
+    echo "nameserver 8.8.8.8" >> /var/spool/postfix/etc/resolv.conf && \
+    echo "nameserver 1.1.1.1" >> /var/spool/postfix/etc/resolv.conf  
 
 # 配置 Postfix
 COPY config/main.cf /etc/postfix/main.cf
@@ -29,12 +35,12 @@ COPY sql/domains.cf.template /etc/postfix/sql/domains.cf.template
 COPY sql/mailbox.cf.template /etc/postfix/sql/mailbox.cf.template
 
 # 启动文件
-WORKDIR /
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+WORKDIR /root
+COPY entrypoint.sh /root/entrypoint.sh
+RUN chmod +x /root/entrypoint.sh
 
 # 暴露 SMTP 端口
 EXPOSE 25 587
 
 # 启动 Postfix
-ENTRYPOINT ["sh", "-c", "/entrypoint.sh"]
+ENTRYPOINT ["sh", "-c", "/root/entrypoint.sh"]
