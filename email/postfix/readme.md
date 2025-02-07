@@ -123,6 +123,14 @@ postfix check
 # 查看 postfix 支持那些验证
 postconf -a
 
+# 查看 postfix 参数
+postconf -n
+
+# 设置 postfix 参数
+postconf -e virtual_transport=lmtp:127.0.0.1:24
+
+
+
 # 查看 SASL 支持的验证模式
 saslauthd -v
 
