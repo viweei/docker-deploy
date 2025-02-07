@@ -34,8 +34,8 @@ RUN apt install -y postfix postfix-mysql postfix-lmdb bind9-dnsutils gettext-bas
 # !!! 写入DNS,不然 SMTP 无法解析域名,狗日的坑我3天~
 # 172.31.255.2 是搬瓦工的DNS
 RUN echo "nameserver 172.31.255.2" > /var/spool/postfix/etc/resolv.conf && \
-    echo "nameserver 8.8.8.8" >> /var/spool/postfix/etc/resolv.conf && \
-    echo "nameserver 1.1.1.1" >> /var/spool/postfix/etc/resolv.conf  
+    echo "nameserver 8.8.8.8" > /var/spool/postfix/etc/resolv.conf && \
+    echo "nameserver 1.1.1.1" > /var/spool/postfix/etc/resolv.conf  
 
 # 配置 Postfix
 COPY config/main.cf /etc/postfix/main.cf
