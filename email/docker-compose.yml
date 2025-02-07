@@ -46,8 +46,10 @@ services:
       context: ./postfix
       dockerfile: dockerfile.debian
     # image: postfix
-    hostname: postfix
     container_name: postfix
+    hostname: postfix
+    dns:
+      - 8.8.8.8
     ports:
       - 25:25
       - 587:587

@@ -28,7 +28,7 @@ RUN apt install -y curl gpg && \
 RUN apt install -y vim net-tools
 
 # 安装 postfix 
-RUN apt install -y postfix postfix-mysql bind9-dnsutils gettext-base
+RUN apt install -y postfix postfix-mysql postfix-lmdb bind9-dnsutils gettext-base
 # mariadb-connector-c 
 
 # 配置 Postfix
