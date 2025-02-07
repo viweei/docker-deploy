@@ -28,20 +28,6 @@ compatibility_level = 3.6
 # SASL 认证
 ## 这是最基本的设置，用于启用 SMTP 认证功能
 smtpd_sasl_auth_enable = yes
-## 禁止匿名登录
-smtpd_sasl_security_options = noanonymous
-#?设置 SASL 认证的本地域名
-smtpd_sasl_local_domain = $myhostname
-## 用于支持一些较老的或不规范的邮件客户端
-broken_sasl_auth_clients = yes
-## 设置收件人限制规则,这是一个重要的安全设置，防止服务器被用作垃圾邮件中继
-## permit_mynetworks: 允许本地网络
-## permit_sasl_authenticated: 允许已通过 SASL 认证的用户发送邮件
-## reject_unauth_destination: 拒绝发往未经授权目标的邮件
-## reject_unlisted_recipient: 拒绝接收发往未知收件人的邮件
-smtpd_recipient_restrictions = permit_mynetworks,permit_sasl_authenticated,reject_unlisted_recipient
-  # reject_unauth_destination,  
-
 # 使用 saslauthd 认证
 
 # smtpd_sasl_path 指定了 Postfix SMTP 服务器与 SASL 认证服务通信的路径或套接字位置。
@@ -64,6 +50,19 @@ smtpd_sasl_type = dovecot
 ## !!! 由于这个配置不能使用 域名，主机名, 只能使用 IP 地址,设置放在外部配置 entrypoint.sh 
 # smtpd_sasl_path = inet:dovecot:12345
 
+## 禁止匿名登录
+smtpd_sasl_security_options = noanonymous
+#?设置 SASL 认证的本地域名
+smtpd_sasl_local_domain = $myhostname
+## 用于支持一些较老的或不规范的邮件客户端
+broken_sasl_auth_clients = yes
+## 设置收件人限制规则,这是一个重要的安全设置，防止服务器被用作垃圾邮件中继
+## permit_mynetworks: 允许本地网络
+## permit_sasl_authenticated: 允许已通过 SASL 认证的用户发送邮件
+## reject_unauth_destination: 拒绝发往未经授权目标的邮件
+## reject_unlisted_recipient: 拒绝接收发往未知收件人的邮件
+smtpd_recipient_restrictions = permit_sasl_authenticated,permit_mynetworks,permit_sasl_authenticated,reject_unlisted_recipient
+  # reject_unauth_destination,  
 
 # TLS 参数
 ## none:    禁用 TLS,使用明文
@@ -83,11 +82,11 @@ smtpd_sasl_type = dovecot
 ## 您的Postfix -> 其他邮件服务器
 smtp_tls_security_level = may
 
-## Postfix 作为服务器（即接收邮件）时的 TLS 安全级别
-## 其他邮件客户端/服务器 -> 您的Postfix
-# 建议使用 encrypt
-smtpd_tls_security_level = encrypt
 smtpd_tls_auth_only = yes
+## Postfix 作为服务器（即接收邮件）时的 TLS 安全级别
+## 其他邮件客户端/服务器 -> 您的Postfix,建议使用 encrypt
+smtpd_tls_security_level = encrypt
+
 
 ## 指定 TLS 证书文件路径。
 smtpd_tls_cert_file=/etc/ssl/mail/mail.viweei.me.pem
@@ -177,3 +176,6 @@ virtual_alias_maps = mysql:/etc/postfix/sql/alias.cf
 ## 指定虚拟邮箱用户的 GID 映射。
 #virtual_gid_maps = static:5000
 
+# 通过 LMTP 协议将邮件传递给 Dovecot
+# 需要IP 放到 entrypoint.sh
+# virtual_transport = lmtp:inet:127.0.0.1:24
