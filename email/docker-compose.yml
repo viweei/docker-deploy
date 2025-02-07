@@ -27,8 +27,10 @@ services:
     # image: dovecot
     container_name: dovecot
     ports:
+      - 24:24
       - 143:143
       - 993:993
+      - 12345:12345
     volumes:
       - ./ssl:/etc/ssl/mail/
       - ./dovecot/sql:/etc/dovecot/sql

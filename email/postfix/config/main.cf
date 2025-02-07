@@ -176,3 +176,4 @@ virtual_alias_maps = mysql:/etc/postfix/sql/alias.cf
 #virtual_uid_maps = static:5000
 ## 指定虚拟邮箱用户的 GID 映射。
 #virtual_gid_maps = static:5000
+
