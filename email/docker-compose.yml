@@ -10,7 +10,7 @@ services:
     hostname: mysql
     container_name: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - TZ=Asia/Shanghai
     security_opt:
       - seccomp:unconfined
@@ -43,8 +43,8 @@ services:
     # image: opendkim
     container_name: opendkim
     hostname: opendkim
-    args:
-      - DOMAIN=viweei.me
+    environment:
+      - DOMAIN=${DOMAIN}
     # 需要把证书弄出来不然一起启动证书就变了
     volumes:
       - ./keys:/etc/opendkim/keys
@@ -56,8 +56,7 @@ services:
       context: ./postfix
       dockerfile: dockerfile.alpine
     container_name: postfix
-    # 这里需要设置为域名, postfix 会把主机名给带上
-    hostname: viweei.me
+    hostname: ${DOMAIN}
     ports:
       - 25:25
       - 587:587
