@@ -153,3 +153,9 @@ dig TXT _dmarc.viweei.me
 ## 邮件测试
 
 1. 垃圾邮件评测 [smtpserver](https://smtpserver.com/cn/mail-tester), [mail tester](https://www.mail-tester.com/),这个一在只能测试 3 次.
+
+## 后续工作
+
+1. 垃圾邮件过滤 spamassasin
+2. 病毒查杀 clamav
+3. 防止暴力破解 fail2ban

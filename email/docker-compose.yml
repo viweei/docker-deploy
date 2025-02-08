@@ -14,8 +14,6 @@ services:
       - TZ=Asia/Shanghai
     security_opt:
       - seccomp:unconfined
-    ports:
-      - 3306:3306
     networks:
       - vmail-net
     volumes:
@@ -25,14 +23,11 @@ services:
     build:
       context: ./dovecot
       dockerfile: dockerfile
-    # image: dovecot
     hostname: dovecot
     container_name: dovecot
     ports:
-      - 24:24
       - 143:143
       - 993:993
-      - 12345:12345
     volumes:
       - ./ssl:/etc/ssl/mail/
       - ./dovecot/sql:/etc/dovecot/sql
@@ -48,8 +43,8 @@ services:
     # image: opendkim
     container_name: opendkim
     hostname: opendkim
-    ports:
-      - 8891:8891
+    args:
+      - DOMAIN=viweei.me
     networks:
       - vmail-net
 
@@ -57,7 +52,6 @@ services:
     build:
       context: ./postfix
       dockerfile: dockerfile.alpine
-    # image: postfix
     container_name: postfix
     # 这里需要设置为域名, postfix 会把主机名给带上
     hostname: viweei.me

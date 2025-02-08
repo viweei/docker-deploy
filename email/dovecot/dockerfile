@@ -3,7 +3,7 @@ ARG VERSION
 LABEL version=$VERSION
 
 ENV TZ Asia/Shanghai
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk add tzdata && cp /usr/share/zoneinfo/${TZ} /etc/localtime
 RUN echo ${TZ} > /etc/timezone
 
@@ -13,7 +13,7 @@ RUN apk update && \
     update-ca-certificates
 
 # 安装 Dovecot 和必要的依赖
-RUN apk add fish vim net-tools busybox-extras
+# RUN apk add fish vim net-tools busybox-extras
 
 RUN apk add dovecot dovecot-lmtpd dovecot-mysql
 
