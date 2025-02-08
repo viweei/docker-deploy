@@ -40,11 +40,10 @@ services:
     build:
       context: ./opendkim
       dockerfile: dockerfile.alpine
-    # image: opendkim
+      args:
+        - DOMAIN=${DOMAIN}
     container_name: opendkim
     hostname: opendkim
-    environment:
-      - DOMAIN=${DOMAIN}
     # 需要把证书弄出来不然一起启动证书就变了
     volumes:
       - ./keys:/etc/opendkim/keys
