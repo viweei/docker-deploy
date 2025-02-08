@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# 休眠5秒是因为有可能依赖的 mysql 和  dovecot, opendkim 还没初始化完成,导致无法获取IP
+sleep 2
+
 export DB_HOST=$(dig +short mysql | head -n 1)
 export DB_PORT=3306
 export DB_USER=mail

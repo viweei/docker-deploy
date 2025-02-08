@@ -45,6 +45,9 @@ services:
     hostname: opendkim
     args:
       - DOMAIN=viweei.me
+    # 需要把证书弄出来不然一起启动证书就变了
+    volumes:
+      - ./keys:/etc/opendkim/keys
     networks:
       - vmail-net
 
