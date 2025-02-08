@@ -182,14 +182,17 @@ virtual_alias_maps = mysql:/etc/postfix/sql/alias.cf
 # 需要IP 放到 entrypoint.sh
 # virtual_transport = lmtp:inet:127.0.0.1:24
 
+
+## 邮件过滤器
+
 ## 当邮件过滤器（milter）无法正常工作时，Postfix 应该采取的默认操作
 # accept：接受邮件，即使邮件过滤器无法正常工作。
 # reject：拒绝邮件，如果邮件过滤器无法正常工作。
 # tempfail：暂时拒绝邮件，提示发送方稍后重试。
-milter_default_action = accept
+#milter_default_action = tempfail
 
 #Postfix 与邮件过滤器（milter）之间使用的协议版本
-milter_protocol = 6
+#milter_protocol = 6
 
 ## 接收邮件时使用的邮件过滤器
 # 可以指定一个或多个邮件过滤器，使用逗号分隔
@@ -198,4 +201,4 @@ milter_protocol = 6
 
 ## Postfix 在处理本地提交的邮件时使用的邮件过滤器。
 # 这个需要在 entrypoint.sh 中设置
-; non_smtpd_milters = inet:opendkim_server_ip:12345
+#non_smtpd_milters = inet:opendkim_server_ip:12345
