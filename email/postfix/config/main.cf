@@ -179,7 +179,6 @@ virtual_alias_maps = mysql:/etc/postfix/sql/alias.cf
 #virtual_gid_maps = static:5000
 
 # 通过 LMTP 协议将邮件传递给 Dovecot
-# 需要IP 放到 entrypoint.sh
 # virtual_transport = lmtp:inet:127.0.0.1:24
 
 
@@ -196,9 +195,7 @@ virtual_alias_maps = mysql:/etc/postfix/sql/alias.cf
 
 ## 接收邮件时使用的邮件过滤器
 # 可以指定一个或多个邮件过滤器，使用逗号分隔
-# 这个需要在 entrypoint.sh 中设置
 #smtpd_milters = inet:opendkim_server_ip:12345
 
 ## Postfix 在处理本地提交的邮件时使用的邮件过滤器。
-# 这个需要在 entrypoint.sh 中设置
 #non_smtpd_milters = inet:opendkim_server_ip:12345

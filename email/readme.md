@@ -149,3 +149,7 @@ sp=quarantine
 ```sh
 dig TXT _dmarc.viweei.me
 ```
+
+## 邮件测试
+
+1. 垃圾邮件评测 [smtpserver](https://smtpserver.com/cn/mail-tester), [mail tester](https://www.mail-tester.com/),这个一在只能测试 3 次.

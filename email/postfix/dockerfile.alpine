@@ -23,8 +23,8 @@ RUN apk add --no-cache postfix postfix-mysql bind-tools gettext-envsubst
 # 172.31.255.2 是搬瓦工的DNS
 RUN mkdir /var/spool/postfix/etc && \
     echo "nameserver 172.31.255.2" > /var/spool/postfix/etc/resolv.conf && \
-    echo "nameserver 8.8.8.8" > /var/spool/postfix/etc/resolv.conf && \
-    echo "nameserver 1.1.1.1" > /var/spool/postfix/etc/resolv.conf  
+    echo "nameserver 8.8.8.8" >> /var/spool/postfix/etc/resolv.conf && \
+    echo "nameserver 1.1.1.1" >> /var/spool/postfix/etc/resolv.conf  
 
 # 配置 Postfix
 COPY config/main.cf /etc/postfix/main.cf
