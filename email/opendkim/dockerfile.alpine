@@ -1,0 +1,52 @@
+FROM alpine:3.21.0
+ARG DOMAIN=example.com
+
+ENV TZ Asia/Shanghai
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN apk add tzdata && cp /usr/share/zoneinfo/${TZ} /etc/localtime
+RUN echo ${TZ} > /etc/timezone
+
+# 安装 Postfix 和必要的软件包
+RUN apk update && \
+    apk add --no-cache ca-certificates && \
+    update-ca-certificates
+
+# 调试用的工具
+RUN apk add fish vim
+
+# 安装 OpenDKIM
+RUN apk add --no-cache opendkim opendkim-utils
+
+# 生成密钥
+RUN mkdir -p /etc/opendkim/keys/$DOMAIN && \
+    opendkim-genkey -D /etc/opendkim/keys/$DOMAIN -d $DOMAIN -s mail
+
+# 配置文件, 主要是因为需要根据环境变量生成配置文件
+# COPY config/opendkim.conf /etc/opendkim.conf
+RUN echo "Domain                  $DOMAIN" > /etc/opendkim.conf && \
+    echo "KeyFile                 /etc/opendkim/keys/$DOMAIN/mail.private" >> /etc/opendkim.conf && \
+    echo "Selector                mail" >> /etc/opendkim.conf && \
+    echo "Socket                  inet:8891@0.0.0.0" >> /etc/opendkim.conf && \
+    echo "Syslog                  yes" >> /etc/opendkim.conf && \
+    echo "UMask                   007" >> /etc/opendkim.conf && \
+    echo "UserID                  opendkim:opendkim" >> /etc/opendkim.conf && \
+    echo "Canonicalization        relaxed/simple" >> /etc/opendkim.conf && \
+    echo "PidFile                 /run/opendkim/opendkim.pid" >> /etc/opendkim.conf && \
+    echo "OversignHeaders         From" >> /etc/opendkim.conf
+
+RUN echo "mail._domainkey.$DOMAIN $DOMAIN:mail:/etc/opendkim/keys/$DOMAIN/mail.private" >> /etc/opendkim/KeyTable && \
+    echo "*@$DOMAIN mail._domainkey.$DOMAIN" >> /etc/opendkim/SigningTable && \
+    echo "127.0.0.1" >> /etc/opendkim/TrustedHosts && \
+    echo "localhost" >> /etc/opendkim/TrustedHosts
+
+# 启动脚本
+RUN echo "#!/bin/sh" > /root/entrypoint.sh && \
+    echo "cat /etc/opendkim/keys/$DOMAIN/mail.txt" >> /root/entrypoint.sh && \
+    echo "opendkim -x /etc/opendkim.conf" >> /root/entrypoint.sh && \
+    echo "tail -f /dev/null" >> /root/entrypoint.sh && \
+    chmod +x /root/entrypoint.sh
+
+# 开放端口
+EXPOSE 8891
+
+ENTRYPOINT ["sh", "-c", "/root/entrypoint.sh"]

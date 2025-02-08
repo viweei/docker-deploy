@@ -41,13 +41,26 @@ services:
     depends_on:
       - mysql
 
+  opendkim:
+    build:
+      context: ./opendkim
+      dockerfile: dockerfile.alpine
+    # image: opendkim
+    container_name: opendkim
+    hostname: opendkim
+    ports:
+      - 8891:8891
+    networks:
+      - vmail-net
+
   postfix:
     build:
       context: ./postfix
       dockerfile: dockerfile.alpine
     # image: postfix
     container_name: postfix
-    hostname: postfix
+    # 这里需要设置为域名, postfix 会把主机名给带上
+    hostname: viweei.me
     ports:
       - 25:25
       - 587:587
@@ -57,3 +70,4 @@ services:
       - vmail-net
     depends_on:
       - dovecot
+      - opendkim

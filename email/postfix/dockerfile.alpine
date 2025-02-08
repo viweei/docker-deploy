@@ -19,6 +19,7 @@ RUN apk add --no-cache postfix postfix-mysql bind-tools gettext-envsubst
 
 
 # !!! 写入DNS,不然 SMTP 无法解析域名,狗日的坑我3天~
+# 网上还说是 apline 域名解析有问题, 狗日的还我换成 debian 依然有问题。
 # 172.31.255.2 是搬瓦工的DNS
 RUN mkdir /var/spool/postfix/etc && \
     echo "nameserver 172.31.255.2" > /var/spool/postfix/etc/resolv.conf && \
