@@ -1,6 +1,15 @@
 # 关于邮件系统的搭建
 
-## 相关系统的说明
+## 使用说明
+
+需要在建立 `./ssl` 和 `keys/` 两个目录,用于保存所需的证书和邮件签名用的公私钥。也可以在`docker-compose.yml`中修改映射目录.另外现在注释了 docker 系统的国内镜像,如果在国内使用需要修改 dockefile.
+
+```sh
+# 在单机中启动系统
+docker compose up --build
+```
+
+## 系统的说明
 
 postfix 是 SMTP 服务器, dovecot 是邮箱服务器, 其工作流程是：
 

@@ -1,0 +1,40 @@
+FROM alpine:3.21.0
+
+ARG PASSWORD=123456
+ARG PORT=8398
+ARG DOMAIN=example.com
+
+ENV PASSWORD=${PASSWORD}
+ENV DOMAIN=${DOMAIN}
+ENV PORT=${PORT}
+
+ENV TZ Asia/Shanghai
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN apk add tzdata && cp /usr/share/zoneinfo/${TZ} /etc/localtime
+RUN echo ${TZ} > /etc/timezone
+
+# 安装 Postfix 和必要的软件包
+RUN apk update && \
+    apk add --no-cache ca-certificates wget gettext-envsubst && \
+    update-ca-certificates
+
+# 安装 调试工具
+RUN apk add net-tools procps-ng
+
+WORKDIR /root
+
+# 下载 shadowsocks-rust 和 v2ray-plugin
+RUN wget https://github.com/shadowsocks/shadowsocks-rust/releases/download/v1.22.0/shadowsocks-v1.22.0.x86_64-unknown-linux-musl.tar.xz
+RUN wget https://github.com/shadowsocks/v2ray-plugin/releases/download/v1.3.2/v2ray-plugin-linux-amd64-v1.3.2.tar.gz
+
+RUN tar -xvf shadowsocks-v1.22.0.x86_64-unknown-linux-musl.tar.xz -C /usr/local/bin  && \
+    tar -xvf v2ray-plugin-linux-amd64-v1.3.2.tar.gz -C /usr/local/bin
+
+COPY config/config-nginx.json ./config-nginx.json
+RUN mkdir -p /etc/shadowsocks && \
+    envsubst < ./config-nginx.json > /etc/shadowsocks/config.json && \
+    rm -f * 
+
+EXPOSE ${PORT}
+
+CMD ["/usr/local/bin/ssserver", "-c", "/etc/shadowsocks/config.json"]
