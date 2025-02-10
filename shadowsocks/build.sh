@@ -10,7 +10,15 @@ while IFS='=' read -r key value; do
   export "$key=$value"
 done < "$ENV_FILE"
 
-envsubst  '${DOMAIN} ${PORT} ${SERVICE}' < ${SCRIPT_PATH}/nginx-site.template
+# 生成随机密码
+length=16
+characters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_\-+=<>?"
+PASSWORD=$(head /dev/urandom | tr -dc "$characters" | head -c"$length")
+
+docker build -t shadowsocks \
+--build-arg DOMAIN=${DOMAIN} \
+--build-arg PORT=${PORT} \
+--build-arg PASSWORD=${PASSWORD} .
 
 while IFS='=' read -r key value; do
   # 跳过注释行和空行
@@ -20,7 +28,3 @@ while IFS='=' read -r key value; do
 done < "$ENV_FILE"
 
 
-# !!! don't forget !!!
-# 1. mapping directory /var/www/${DOMAIN} 
-# 2. mapping directory /etc/nginx/sites-enabled
-# 3. mapping directory /etc/nginx/ssl
