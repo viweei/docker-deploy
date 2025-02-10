@@ -1,14 +1,23 @@
+# rust-shadowsocks docker 部署
+
+这个部署用到了 `v2ray-plugin` 和 `nginx` 分流.需要先编译后再运行。
+
 ## 编译
 
-```sh
-# 编译需要导出2个变量,需要在 .env中修改后使用build.sh脚本创建
+编译依赖 `DOMAIN` , `PORT` 和 `PASSWORD`变量.
 
-# 也可以手动指定
+1. 变更可以写在`.env`文件中,使用 build.sh 脚本打包.该方法会随机生成 PASSWORD。
+2. 手动部打包
+
+```sh
+# 脚本打包
+./build.sh
+
+# 手动打包
 docker build -t shadowsocks \
 --build-arg DOMAIN=${DOMAIN} \
 --build-arg PORT=${PORT} \
 --build-arg PASSWORD=${PASSWORD} .
-
 ```
 
 ## 启动
@@ -17,43 +26,38 @@ docker build -t shadowsocks \
 
 docker run -d --rm \
   --name shadowsocks \
-  -p 8388:$(cat .env |grep PORT | awk -F '=' '{print $2}') \
-  shadowsocks
-
-docker run -d \
-  --name shadowsocks \
   --network vmail-net \
-  -p 8499:$(cat .env |grep PORT | awk -F '=' '{print $2}') \
-  shadowsocks
+  -p 8388:8388 \
+  shadowsocks:latest
 
 ```
 
-或者可以使用 `docker compose`
+或者使用 `docker compose`
 
-```yaml
-name: shadowsocks
+```yml
+# name: shadowsocks
 
 networks:
   virtual-net:
+    name: virtual-net
 
 services:
   shadowsocks:
-    build:
-      context: ./
-      dockerfile: dockerfile
+    image: shadowsocks:latest
     restart: on-failure
     hostname: shadowsocks
     container_name: shadowsocks
     networks:
-      - vmail-net
+      - virtual-net
 
   nginx:
     image: nginx:stable-alpine3.20
     restart: always
     container_name: nginx
     volumes:
-      - ${sites-enabled}:/etc/nginx/sites-enabled
+      - ${conf.d}:/etc/nginx/conf.d
       - ${ssl}:/etc/nginx/ssl
+      - ${www}:/var/www/${DOMAIN}
     ports:
       - 80:80
       - 443:443

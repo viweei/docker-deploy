@@ -1,7 +1,8 @@
 name: mail
 
 networks:
-  vmail-net:
+  virtual-net:
+    name: vmail-net
 
 services:
   mysql:
