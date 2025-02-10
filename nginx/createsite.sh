@@ -1,6 +1,7 @@
 #! /bin/sh
 
 ENV_FILE=.env
+SCRIPT_PATH=$(dirname $0)
 
 while IFS='=' read -r key value; do
   # 跳过注释行和空行
@@ -9,7 +10,7 @@ while IFS='=' read -r key value; do
   export "$key=$value"
 done < "$ENV_FILE"
 
-envsubst  '${DOMAIN} ${PORT} ${SERVICE}' < nginx-site.template
+envsubst  '${DOMAIN} ${PORT} ${SERVICE}' < ${SCRIPT_PATH}/nginx-site.template
 
 while IFS='=' read -r key value; do
   # 跳过注释行和空行
