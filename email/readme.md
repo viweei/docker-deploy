@@ -156,6 +156,7 @@ dig TXT _dmarc.viweei.me
 
 ## 后续工作
 
-1. 垃圾邮件过滤 spamassasin
-2. 病毒查杀 clamav
-3. 防止暴力破解 fail2ban
+1. 邮件过滤
+   Amavis spamassasin(垃圾邮件), clamav(病毒查杀)
+
+2. 防止暴力破解 fail2ban

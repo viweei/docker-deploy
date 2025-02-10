@@ -12,6 +12,9 @@ if [ ! -f ${KEY_PATH}/mail.private ];then
   opendkim-genkey -D ${KEY_PATH} -d ${DOMAIN} -s mail
 fi
 
+# 由于目录权限问题,需要重新设置一下
+chown -R opendkim:opendkim ${KEY_PATH}
+
 # 启动opendkim
 cat /etc/opendkim/keys/mail.txt
 opendkim -x /etc/opendkim.conf
