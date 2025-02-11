@@ -23,5 +23,6 @@ postconf -e smtpd_milters=inet:${OPENDKIM_HOST}:8891
 postconf -e non_smtpd_milters=inet:${OPENDKIM_HOST}:8891
 
 # Start Postfix
+postfix reload
 postfix start
 tail -f /var/log/postfix.log 

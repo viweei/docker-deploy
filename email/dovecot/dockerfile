@@ -26,13 +26,16 @@ COPY config/10-ssl.conf /etc/dovecot/conf.d/10-ssl.conf
 # 日志
 COPY config/10-logging.conf /etc/dovecot/conf.d/10-logging.conf
 
-
 # 修改目录权限
 RUN chown -R dovecot:dovecot /var/mail
+
+WORKDIR /root
+RUN echo "dovecot" > entrypoint.sh && \
+    echo "tail -f /var/log/dovecot-info.log" >> entrypoint.sh && \
+    chmod +x entrypoint.sh
 
 # 暴露 IMAP IMAPD AUTH 端口
 EXPOSE 24 143 993 12345
 
 # 启动 Dovecot
-# ENTRYPOINT [ "dovecot", "-F" ]
-CMD ["dovecot" "&&" "tail -f /var/log/dovecot-info.log"]
+ENTRYPOINT ["sh", "-c", "/root/entrypoint.sh"]
