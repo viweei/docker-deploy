@@ -14,26 +14,20 @@
 ./build.sh
 
 # 手动打包
-docker build -t shadowsocks \
---build-arg DOMAIN=${DOMAIN} \
---build-arg PORT=${PORT} \
---build-arg PASSWORD=${PASSWORD} .
+docker build \
+--build-arg PORT=8388 \
+-t shadowsocks .
 ```
 
 ## 启动
 
 ```sh
 
-docker run -d --rm \
+docker run -it --rm \
+  --network shared-net
   --name shadowsocks \
-  --network vmail-net \
+  -e DOMAIN=viweei.me \
+  -e PASSWORD= \
   -p 8388:8388 \
   shadowsocks:latest
-
-```
-
-或者使用 `docker compose`
-
-```sh
-docker compose up
 ```

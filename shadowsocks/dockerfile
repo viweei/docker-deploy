@@ -1,10 +1,8 @@
 FROM alpine:3.21.0
 
-ARG DOMAIN
 ARG PORT
-ARG PASSWORD
 
-ENV TZ Asia/Shanghai
+ENV TZ=Asia/Shanghai
 # RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
 RUN apk add tzdata && cp /usr/share/zoneinfo/${TZ} /etc/localtime
 RUN echo ${TZ} > /etc/timezone
@@ -33,21 +31,16 @@ RUN mkdir -p /etc/shadowsocks && \
       "server": "0.0.0.0",\n \
       "mode": "tcp_and_udp",\n \
       "server_port": '${PORT}',\n \
-      "password": "'${PASSWORD}'",\n \
+      "password": "${PASSWORD}",\n \
       "timeout": 300,\n \
       "nameserver": "8.8.8.8",\n \
       "fast_open": true,\n \
       "no_delay": true,\n \
       "method": "aes-256-gcm",\n \
       "plugin": "/usr/local/bin/v2ray-plugin_linux_amd64",\n \
-      "plugin_opts": "server;path=/stream;mode=websocket;host='${DOMAIN}'"\n \
+      "plugin_opts": "server;path=/stream;mode=websocket;host=${DOMAIN}"\n \
     }' > /etc/shadowsocks/config.json
-
-RUN echo -e '#!/bin/sh\n \
-    cat /etc/shadowsocks/config.json\n \
-    /usr/local/bin/ssserver -c /etc/shadowsocks/config.json\n' > /root/entrypoint.sh
-RUN chmod +x /root/entrypoint.sh
 
 EXPOSE ${PORT}
 
-CMD ["/root/entrypoint.sh"]
+CMD ["/usr/local/bin/ssserver", "-c", "/etc/shadowsocks/config.json"]

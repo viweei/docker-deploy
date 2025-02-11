@@ -11,7 +11,7 @@ while IFS='=' read -r key value; do
 done < "$ENV_FILE"
 
 # 生成随机密码
-length=16
+length=20
 characters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_\-+=<>?"
 PASSWORD=$(head /dev/urandom | tr -dc "$characters" | head -c"$length")
 
