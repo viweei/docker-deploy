@@ -18,9 +18,3 @@ while IFS='=' read -r key value; do
 
   unset $key
 done < "$ENV_FILE"
-
-
-# !!! don't forget !!!
-# 1. mapping directory /var/www/${DOMAIN} 
-# 2. mapping directory /etc/nginx/sites-enabled
-# 3. mapping directory /etc/nginx/ssl

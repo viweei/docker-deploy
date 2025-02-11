@@ -1,4 +1,4 @@
-name: shadowsocks
+name: all-services
 
 services:
   shadowsocks:
@@ -9,14 +9,27 @@ services:
     networks:
       - shared-net
 
+  frps:
+    image: frps:latest
+    restart: on-failure
+    hostname: frps
+    container_name: frps
+    environment:
+      - VHOST_PORT=8080
+      - TOKEN=123456
+    ports:
+      - 7000:7000
+    networks:
+      - shared-net
+
   nginx:
     image: nginx:stable-alpine3.20
     restart: always
     container_name: nginx
     volumes:
-      - ./conf.d:/etc/nginx/conf.d
-      - ./ssl:/etc/nginx/ssl
-      - ./www:/var/www/viweei.me
+      - /etc/nginx/conf.d:/etc/nginx/conf.d
+      - /etc/nginx/ssl:/etc/nginx/ssl
+      - /var/www:/var/www
     ports:
       - 80:80
       - 443:443
