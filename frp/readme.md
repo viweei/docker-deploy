@@ -48,6 +48,11 @@ service:
     restart: on-failure
     hostname: frps
     container_name: frps
+    environment:
+      - VHOST_PORT=8080
+      - TOKEN=123456
+    ports:
+      - 7000:7000
     networks:
       - shared-net
 ```
