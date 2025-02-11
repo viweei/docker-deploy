@@ -17,12 +17,12 @@ RUN wget https://github.com/fatedier/frp/releases/download/v0.61.1/frp_0.61.1_li
     tar -zxvf frp_0.61.1_linux_amd64.tar.gz && \
     mv frp_0.61.1_linux_amd64/frps /usr/local/bin/frps
 
-RUN echo "bindPort = ${PORT}" > /etc/frps.toml && \
+RUN echo "bindPort = $PORT" > /etc/frps.toml && \
     echo "vhostHTTPPort = {{ .Envs.VHOST_PORT }}" >> /etc/frps.toml && \
     echo "auth.method = \"token\"" >> /etc/frps.toml && \
     echo "auth.token = \"{{ .Envs.TOKEN }}\"" >> /etc/frps.toml
 
-EXPOSE ${PORT}
+EXPOSE $PORT
 
 ENTRYPOINT ["/usr/local/bin/frps", "-c", "/etc/frps.toml"]
 
