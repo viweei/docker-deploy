@@ -11,7 +11,7 @@ RUN apk update && \
     update-ca-certificates
 
 # 调试用的工具
-RUN apk add fish vim net-tools busybox-extras
+# RUN apk add fish vim net-tools busybox-extras
 
 # 安装 postfix 和必要的依赖
 RUN apk add --no-cache postfix postfix-mysql bind-tools gettext-envsubst

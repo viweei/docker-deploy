@@ -34,4 +34,5 @@ RUN chown -R dovecot:dovecot /var/mail
 EXPOSE 24 143 993 12345
 
 # 启动 Dovecot
-ENTRYPOINT [ "dovecot", "-F" ]
+# ENTRYPOINT [ "dovecot", "-F" ]
+CMD ["dovecot" "&&" "tail -f /var/log/dovecot-info.log"]

@@ -15,7 +15,7 @@ RUN apk update && \
     update-ca-certificates
 
 # 调试用的工具
-RUN apk add fish vim
+# RUN apk add fish vim
 
 # 安装 OpenDKIM
 RUN apk add --no-cache opendkim opendkim-utils

@@ -4,6 +4,8 @@
 
 需要在建立 `./ssl` 和 `keys/` 两个目录,用于保存所需的证书和邮件签名用的公私钥。也可以在`docker-compose.yml`中修改映射目录.另外现在注释了 docker 系统的国内镜像,如果在国内使用需要修改 dockefile.
 
+!!! 需要注意的是,由于 postfix 依赖于另外的几个服务，所以它应该是最后启动,虽然在`docker-compose`中配置了相关的依赖,但有时候还是需要等其它服务启动后再手动重启一下 postfix.
+
 ```sh
 # 在单机中启动系统
 docker compose up --build
