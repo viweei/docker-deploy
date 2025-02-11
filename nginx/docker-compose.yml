@@ -29,6 +29,8 @@ services:
     environment:
       - VHOST_PORT=${VHOST_PORT}
       - TOKEN=${PASSWORD}
+    ports:
+      - ${FRP_PORT}:${FRP_PORT}
     networks:
       - shared-net
 
