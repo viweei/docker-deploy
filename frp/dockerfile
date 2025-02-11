@@ -1,0 +1,28 @@
+FROM alpine:3.21.0
+
+ARG PORT
+
+ENV TZ Asia/Shanghai
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+RUN apk add tzdata && cp /usr/share/zoneinfo/${TZ} /etc/localtime
+RUN echo ${TZ} > /etc/timezone
+
+# 安装 Postfix 和必要的软件包
+RUN apk update && \
+    apk add --no-cache ca-certificates wget && \
+    update-ca-certificates
+
+# 下载 frp
+RUN wget https://github.com/fatedier/frp/releases/download/v0.61.1/frp_0.61.1_linux_amd64.tar.gz && \
+    tar -zxvf frp_0.61.1_linux_amd64.tar.gz && \
+    mv frp_0.61.1_linux_amd64/frps /usr/local/bin/frps
+
+RUN echo "bindPort = ${PORT}" > /etc/frps.toml && \
+    echo "vhostHTTPPort = {{ .Envs.VHOST_PORT }}" >> /etc/frps.toml && \
+    echo "auth.method = \"token\"" >> /etc/frps.toml && \
+    echo "auth.token = \"{{ .Envs.TOKEN }}\"" >> /etc/frps.toml
+
+EXPOSE ${PORT}
+
+ENTRYPOINT ["/usr/local/bin/frps", "-c", "/etc/frps.toml"]
+
