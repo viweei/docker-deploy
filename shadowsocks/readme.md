@@ -34,34 +34,6 @@ docker run -d --rm \
 
 或者使用 `docker compose`
 
-```yml
-name: shadowsocks
-
-networks:
-  shared-net:
-    name: shared-net
-    external: true
-
-services:
-  shadowsocks:
-    image: shadowsocks:latest
-    restart: on-failure
-    hostname: shadowsocks
-    container_name: shadowsocks
-    networks:
-      - shared-net
-
-  nginx:
-    image: nginx:stable-alpine3.20
-    restart: always
-    container_name: nginx
-    volumes:
-      - ${conf.d}:/etc/nginx/conf.d
-      - ${ssl}:/etc/nginx/ssl
-      - ${www}:/var/www/${DOMAIN}
-    ports:
-      - 80:80
-      - 443:443
-    networks:
-      - shared-net
+```sh
+docker compose up
 ```

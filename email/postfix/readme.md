@@ -129,8 +129,6 @@ postconf -n
 # 设置 postfix 参数
 postconf -e virtual_transport=lmtp:127.0.0.1:24
 
-
-
 # 查看 SASL 支持的验证模式
 saslauthd -v
 
@@ -143,7 +141,7 @@ testsaslauthd -u [username] -p [password]
 # 如果报权限不够，需要加入 sasl用户组.
 
 # 检查postfix数据库是否连通
-postmap -q 'testi@viweei.me' mysql:/etc/postfix/sql/mailbox.cf
+postmap -q 'test@viweei.me' mysql:/etc/postfix/sql/mailbox.cf
 ```
 
 ### 问题集

@@ -118,9 +118,9 @@ smtpd_relay_restrictions = permit_sasl_authenticated,reject_unauth_destination
 alias_maps = 
 alias_database = 
 
-## mydestination 定义了哪些邮件应该被投递到本地邮箱，而不是被转发到其他邮件服务器
+## mydestination 定义了哪些邮件需要postfix保留，而不是被转发到其他邮件服务器
 ## 但 mydestination 和 虚拟邮件有冲突 
-# mydestination = $myhostname, viweei.me, special-story-2.localdomain, localhost.localdomain, localhost
+mydestination = localhost
 
 ## 指定中继主机，就是下一个 SMTP 服务器，空值表示直接发送，不经过中继
 ## 使用场景：内部网络向外部网络发邮件.
