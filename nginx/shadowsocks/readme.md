@@ -14,9 +14,7 @@
 ./build.sh
 
 # 手动打包
-docker build \
---build-arg PORT=8388 \
--t shadowsocks .
+docker build --build-arg PORT=8388 -t shadowsocks .
 ```
 
 ## 启动
@@ -24,10 +22,10 @@ docker build \
 ```sh
 
 docker run -it --rm \
-  --network shared-net
+  --network shared-net \
   --name shadowsocks \
   -e DOMAIN=viweei.me \
-  -e PASSWORD= \
+  -e PASSWORD="" \
   -p 8388:8388 \
   shadowsocks:latest
 ```

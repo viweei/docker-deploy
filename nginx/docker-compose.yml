@@ -2,23 +2,33 @@ name: all-services
 
 services:
   shadowsocks:
-    image: shadowsocks:latest
+    build:
+      context: ./shadowsocks
+      dockerfile: dockerfile
+      args:
+        - PORT=${SS_PORT}
+    # image: shadowsocks:latest
     restart: on-failure
     hostname: shadowsocks
     container_name: shadowsocks
+    environment:
+      - PASSWORD=${PASSWORD}
     networks:
       - shared-net
 
   frps:
-    image: frps:latest
+    build:
+      context: ../shadowsocks
+      dockerfile: dockerfile
+      args:
+        - PORT=${FRP_PORT}
+    # image: frps:latest
     restart: on-failure
     hostname: frps
     container_name: frps
     environment:
-      - VHOST_PORT=8080
+      - VHOST_PORT=${VHOST_PORT}
       - TOKEN=123456
-    ports:
-      - 7000:7000
     networks:
       - shared-net
 
