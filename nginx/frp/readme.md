@@ -1,8 +1,6 @@
 # FRP 内网穿透
 
-目前主要用于微信小程序的内网穿透.
-
-主要配置如下:
+目前主要用于微信小程序的内网穿透,配置说明如下:
 
 ```ini
 # 相当于客户端要连接的端口, 这个端口需要暴露出来给客户端使用
@@ -38,25 +36,6 @@ docker run --rm --name frps \
 frps:latest
 ```
 
-2. docker compose
-
-```yml
-需要注意 网络名称: shared-net,
-service:
-  frps:
-    image: frps:latest
-    restart: on-failure
-    hostname: frps
-    container_name: frps
-    environment:
-      - VHOST_PORT=8080
-      - TOKEN=123456
-    ports:
-      - 7000:7000
-    networks:
-      - shared-net
-```
-
 ## nginx 转发
 
 ```conf
@@ -70,4 +49,44 @@ service:
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   }
 
+```
+
+## 客户端使用
+
+```sh
+# 安装
+wget https://github.com/fatedier/frp/releases/download/v0.61.1/frp_0.61.1_linux_amd64.tar.gz
+tar -xvf frp_0.61.1_linux_amd64.tar.gz
+sudo cp frp_0.61.1_linux_amd64/frpc /usr/local/bin/frpc
+rm -rf frp_0.61.1_linux_amd64 frp_0.61.1_linux_amd64.tar.gz
+
+# 将下面的配置文件对应修改后放到 /etc下即可
+
+# 启动
+frpc -c /etc/frp_client.toml
+```
+
+```ini
+# 转发器主机地址, 可以IP、域名
+serverAddr = "viweei.me"
+# 转发器主机端口
+serverPort = 7000
+auth.method = "token"
+# 验证TOKEN
+auth.token = "dLZmxx^Ksvx4(jWG"
+
+[[proxies]]
+name = "http"
+# 转发的类型
+type = "http"
+# 收到请求后转发的 目的地主机地址
+localIP = "127.0.0.1"
+# 目的地主机端口
+localPort = 3000
+# 接收的域名
+customDomains = ["www.viweei.me"]
+# 启用加密
+transport.useEncryption = true
+# 启用压缩
+transport.useCompression = true
 ```

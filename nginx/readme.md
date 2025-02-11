@@ -1,6 +1,11 @@
-# Nignx docker 部署
+# Nignx 部署
 
-docker 采用官方发布版本, 只需要映射 3 个目录即可.
+## 系统介绍
+
+1. frp 内网穿透
+2. shadowsocks 翻墙小飞机
+
+## nginx 导出目录
 
 1. `/etc/nginx/conf.d` 本地站点的配置文件,站点的配置文件需要 `.conf` 结尾. 以 `help.viweei.me` 为例,配置文件应为 `help.viweei.me.conf`.
 
@@ -15,6 +20,12 @@ ssl_certificate_key /etc/nginx/ssl/viweei.me.key;
 
 具体的可以参考 `./nginx-site.template`.
 
-## docker-compose.yml
+## 打包
 
-包含了本项目中,需要通过 nginx 转发服务。
+打包依赖于 `.env` 文件中的几个环境变量.
+
+1. DOMAIN: 用于在各服务器使用的域名, 目前 frp, ss 都依赖.
+2. PASSWORD: 密码,用于 frp, ss 连接时的鉴权.
+3. SS_PORT: shadowsocks 的监听端口，借助 v2ray-plugin 将 ss 伪装到 nginx 中. 不必对外网暴露.
+4. FRP_PORT: FRPS 的监听端口, 需要对外暴露,让 FRPC 连接.
+5. VHOST_PORT: FRP 网关的监听端口, nginx 收到请求后转发到该端口.
