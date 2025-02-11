@@ -35,7 +35,7 @@ docker run -d --rm \
 或者使用 `docker compose`
 
 ```yml
-# name: shadowsocks
+name: shadowsocks
 
 networks:
   virtual-net:
