@@ -13,13 +13,24 @@ docker compose up --build
 
 postfix 是 SMTP 服务器, dovecot 是邮箱服务器, 其工作流程是：
 
-1. 外部 STMP 服务器先把邮件投递到本地的 SMTP 服务器(postfix).
-2. postfix 根据 virtual_mailbox_domains 判断域名是否是本地邮件.
-3. 如果是本地邮件则保存邮件,外部邮件则投递给外部的 STMP 服务器
-   3.1 如果配置了 dovecot 则使用 ltmp 协议转给 dovecot 去保存.
-   3.2 如果没有则配置保存到本地文件中.
+```mermaid
+sequenceDiagram
+  participant 外部STMP服务器
+  participant 本地SMTP服务器(postfix)
+  participant dovecot
+  participant 本地文件
 
-postfix 只会验证是否存在该用户,以及如何保存。当 STMP 需要验证密码时,则需要通过 SASL 或 dovecot 去验证密码.
+  外部STMP服务器->>本地SMTP服务器(postfix): 投递邮件
+  本地SMTP服务器(postfix)->>本地SMTP服务器(postfix): 判断域名是否是本地邮件
+  alt 是本地邮件
+    本地SMTP服务器(postfix)->>dovecot: 使用 ltmp 协议转发邮件
+    dovecot->>本地文件: 保存邮件
+  else 不是本地邮件
+    本地SMTP服务器(postfix)->>外部STMP服务器: 投递邮件
+  end
+```
+
+postfix 只会验证是否存在该用户以及如何保存。当 STMP 需要验证密码时,则需要通过 SASL 或 dovecot 去验证密码.
 
 ### postfix
 
