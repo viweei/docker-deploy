@@ -38,8 +38,9 @@ docker run -d --rm \
 name: shadowsocks
 
 networks:
-  virtual-net:
-    name: virtual-net
+  shared-net:
+    name: shared-net
+    external: true
 
 services:
   shadowsocks:
@@ -48,7 +49,7 @@ services:
     hostname: shadowsocks
     container_name: shadowsocks
     networks:
-      - virtual-net
+      - shared-net
 
   nginx:
     image: nginx:stable-alpine3.20
@@ -62,5 +63,5 @@ services:
       - 80:80
       - 443:443
     networks:
-      - virtual-net
+      - shared-net
 ```

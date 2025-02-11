@@ -1,8 +1,9 @@
 name: mail
 
 networks:
-  virtual-net:
-    name: virtual-net
+  shared-net:
+    name: shared-net
+    external: true
 
 services:
   mysql:
@@ -16,7 +17,7 @@ services:
     security_opt:
       - seccomp:unconfined
     networks:
-      - virtual-net
+      - shared-net
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d
 
@@ -33,7 +34,7 @@ services:
       - ./ssl:/etc/ssl/mail/
       - ./dovecot/sql:/etc/dovecot/sql
     networks:
-      - virtual-net
+      - shared-net
     depends_on:
       - mysql
 
@@ -49,7 +50,7 @@ services:
     volumes:
       - ./keys:/etc/opendkim/keys
     networks:
-      - virtual-net
+      - shared-net
 
   postfix:
     build:
@@ -63,7 +64,7 @@ services:
     volumes:
       - ./ssl:/etc/ssl/mail
     networks:
-      - virtual-net
+      - shared-net
     depends_on:
       - dovecot
       - opendkim
