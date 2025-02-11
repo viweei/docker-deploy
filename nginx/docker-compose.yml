@@ -28,7 +28,7 @@ services:
     container_name: frps
     environment:
       - VHOST_PORT=${VHOST_PORT}
-      - TOKEN=123456
+      - TOKEN=${PASSWORD}
     networks:
       - shared-net
 
