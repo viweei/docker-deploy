@@ -48,7 +48,9 @@ smtpd_sasl_type = dovecot
 ## 使用网络套接字连接 dovecot
 ## inet:[ip]:[port]
 ## !!! 由于这个配置不能使用 域名，主机名, 只能使用 IP 地址,设置放在外部配置 entrypoint.sh 
-# smtpd_sasl_path = inet:dovecot:12345
+#!!! 需要在启动时获取IP后刷新
+smtpd_sasl_path = inet:dovecot:12345
+
 
 ## 禁止匿名登录
 smtpd_sasl_security_options = noanonymous
@@ -179,7 +181,8 @@ virtual_alias_maps = mysql:/etc/postfix/sql/alias.cf
 #virtual_gid_maps = static:5000
 
 # 通过 LMTP 协议将邮件传递给 Dovecot
-# virtual_transport = lmtp:inet:127.0.0.1:24
+#!!! 需要在启动时获取IP后刷新
+virtual_transport = lmtp:inet:dovecot:24
 
 
 ## 邮件过滤器
@@ -188,14 +191,16 @@ virtual_alias_maps = mysql:/etc/postfix/sql/alias.cf
 # accept：接受邮件，即使邮件过滤器无法正常工作。
 # reject：拒绝邮件，如果邮件过滤器无法正常工作。
 # tempfail：暂时拒绝邮件，提示发送方稍后重试。
-#milter_default_action = tempfail
+milter_default_action = tempfail
 
 #Postfix 与邮件过滤器（milter）之间使用的协议版本
-#milter_protocol = 6
+milter_protocol = 6
 
 ## 接收邮件时使用的邮件过滤器
 # 可以指定一个或多个邮件过滤器，使用逗号分隔
-#smtpd_milters = inet:opendkim_server_ip:12345
+#!!! 需要在启动时获取IP后刷新
+smtpd_milters = inet:opendkim:12345
 
 ## Postfix 在处理本地提交的邮件时使用的邮件过滤器。
-#non_smtpd_milters = inet:opendkim_server_ip:12345
+#!!! 需要在启动时获取IP后刷新
+non_smtpd_milters = inet:opendkim:12345
