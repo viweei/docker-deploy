@@ -34,6 +34,22 @@ services:
     networks:
       - shared-net
 
+  vaultwarden:
+    image: vaultwarden/server:latest
+    restart: always
+    container_name: vaultwarden
+    ports:
+        - "7951:80"
+    volumes:
+      - $PWD/vaultwarden:/data
+    environment:
+      WEBSOCKET_ENABLED: "true" # 是否开启WebSocket
+      SIGNUPS_ALLOWED: "true"  # 是否开启注册，自用的话自己搭建好注册后改成false
+      WEB_VAULT_ENABLED: "true" #是否开启Web客户端
+      # ADMIN_TOKEN: "{你生成的安全密码}"   #后台登陆密码，建议openssl rand -base64 48 生成ADMIN_TOKEN确保安全，当前是      
+    networks:
+      - shared-net
+
   nginx:
     image: nginx:stable-alpine3.20
     restart: always
