@@ -7,7 +7,6 @@ services:
       dockerfile: dockerfile
       args:
         - PORT=${SS_PORT}
-    # image: shadowsocks:latest
     restart: on-failure
     hostname: shadowsocks
     container_name: shadowsocks
@@ -38,15 +37,13 @@ services:
     image: vaultwarden/server:latest
     restart: always
     container_name: vaultwarden
-    # ports:
-    #     - "7951:80"
     volumes:
       - $PWD/vaultwarden:/data
     environment:
       - DOMAIN=https://viweei.me
     #   WEBSOCKET_ENABLED: "true"
-    #   SIGNUPS_ALLOWED: "true"
-    #   WEB_VAULT_ENABLED: "true"
+      - SIGNUPS_ALLOWED: "false"
+      - WEB_VAULT_ENABLED: "false"
     networks:
       - shared-net
 
