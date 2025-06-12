@@ -16,37 +16,36 @@ services:
     networks:
       - shared-net
 
-  frps:
-    build:
-      context: ./frp
-      dockerfile: dockerfile
-      args:
-        - PORT=${FRP_PORT}
-    # image: frps:latest
-    restart: on-failure
-    hostname: frps
-    container_name: frps
-    environment:
-      - VHOST_PORT=${VHOST_PORT}
-      - TOKEN=${PASSWORD}
-    ports:
-      - ${FRP_PORT}:${FRP_PORT}
-    networks:
-      - shared-net
+  # frps:
+  #   build:
+  #     context: ./frp
+  #     dockerfile: dockerfile
+  #     args:
+  #       - PORT=${FRP_PORT}
+  #   # image: frps:latest
+  #   restart: on-failure
+  #   hostname: frps
+  #   container_name: frps
+  #   environment:
+  #     - VHOST_PORT=${VHOST_PORT}
+  #     - TOKEN=${PASSWORD}
+  #   ports:
+  #     - ${FRP_PORT}:${FRP_PORT}
+  #   networks:
+  #     - shared-net
 
   vaultwarden:
     image: vaultwarden/server:latest
     restart: always
     container_name: vaultwarden
-    ports:
-        - "7951:80"
+    # ports:
+    #     - "7951:80"
     volumes:
       - $PWD/vaultwarden:/data
-    environment:
-      WEBSOCKET_ENABLED: "true" # 是否开启WebSocket
-      SIGNUPS_ALLOWED: "true"  # 是否开启注册，自用的话自己搭建好注册后改成false
-      WEB_VAULT_ENABLED: "true" #是否开启Web客户端
-      # ADMIN_TOKEN: "{你生成的安全密码}"   #后台登陆密码，建议openssl rand -base64 48 生成ADMIN_TOKEN确保安全，当前是      
+    # environment:
+    #   WEBSOCKET_ENABLED: "true"
+    #   SIGNUPS_ALLOWED: "true"
+    #   WEB_VAULT_ENABLED: "true"
     networks:
       - shared-net
 
