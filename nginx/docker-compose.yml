@@ -40,10 +40,8 @@ services:
     volumes:
       - ${VAULTWARDEN_PATH}/vaultwarden:/data
     environment:
-      - DOMAIN=https://${DOMAIN}
-    # - WEBSOCKET_ENABLED=""true"
-      - SIGNUPS_ALLOWED=true
-      - WEB_VAULT_ENABLED=true
+      - SIGNUPS_ALLOWED=false
+      - WEB_VAULT_ENABLED=false
     networks:
       - shared-net
 
