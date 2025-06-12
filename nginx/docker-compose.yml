@@ -40,7 +40,7 @@ services:
     volumes:
       - $PWD/vaultwarden:/data
     environment:
-      - DOMAIN=https://viweei.me
+      - DOMAIN=https://${DOMAIN}
     #   WEBSOCKET_ENABLED: "true"
       - SIGNUPS_ALLOWED: "false"
       - WEB_VAULT_ENABLED: "false"
