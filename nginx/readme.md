@@ -34,3 +34,4 @@ ssl_certificate_key /etc/nginx/ssl/viweei.me.key;
 3. SS_PORT: shadowsocks 的监听端口，借助 v2ray-plugin 将 ss 伪装到 nginx 中. 不必对外网暴露.
 4. FRP_PORT: FRPS 的监听端口, 需要对外暴露,让 FRPC 连接.
 5. VHOST_PORT: FRP 网关的监听端口, nginx 收到请求后转发到该端口.
+6. VAULTWARDEN_PATH: vaultwarden 的数据目录, 可以放在宿主机的任意位置

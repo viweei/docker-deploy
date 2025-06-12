@@ -38,12 +38,12 @@ services:
     restart: always
     container_name: vaultwarden
     volumes:
-      - $PWD/vaultwarden:/data
+      - ${VAULTWARDEN_PATH}/vaultwarden:/data
     environment:
       - DOMAIN=https://${DOMAIN}
     #   WEBSOCKET_ENABLED: "true"
-      - SIGNUPS_ALLOWED: "false"
-      - WEB_VAULT_ENABLED: "false"
+      - SIGNUPS_ALLOWED: false
+      - WEB_VAULT_ENABLED: false
     networks:
       - shared-net
 
